@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BaZi Four Pillars AI Tool</title>
+    <title>BaZi AI Assistant - Four Pillars of Destiny</title>
     <style>
         * {
             margin: 0;
@@ -19,9 +19,33 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+        }
+        
+        .main-content {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .ai-chat-panel {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            max-height: 90vh;
+            position: sticky;
+            top: 20px;
         }
         
         .header {
@@ -39,6 +63,109 @@
         .header p {
             font-size: 1.2em;
             opacity: 0.9;
+        }
+        
+        .chat-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+        }
+        
+        .chat-header h3 {
+            margin-bottom: 5px;
+        }
+        
+        .chat-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+            min-height: 300px;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 90%;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        .user-message {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .ai-message {
+            background: #f0f2f5;
+            color: #333;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+        
+        .send-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            background: #5a6fd8;
+        }
+        
+        .quick-questions {
+            margin-bottom: 15px;
+        }
+        
+        .quick-question {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 8px 12px;
+            margin: 4px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+        
+        .quick-question:hover {
+            background: #667eea;
+            color: white;
         }
         
         .tabs {
@@ -69,11 +196,6 @@
         
         .tab-content {
             display: none;
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 30px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
         .tab-content.active {
@@ -156,6 +278,13 @@
             padding: 15px;
             text-align: center;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pillar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
         .pillar h4 {
@@ -273,7 +402,38 @@
         .alert-warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
         .alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
         
+        .ai-suggestion {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .ai-suggestion:hover {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            transform: translateY(-2px);
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 10px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .typing-indicator.show {
+            display: block;
+        }
+        
         @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -285,167 +445,209 @@
             .tabs {
                 flex-direction: column;
             }
+            
+            .ai-chat-panel {
+                order: -1;
+                position: relative;
+                max-height: 50vh;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div style="position: absolute; top: 0; left: 0; right: 0; z-index: -1;">
         <div class="header">
-            <h1>🔮 BaZi Four Pillars AI Tool</h1>
-            <p>Discover your destiny through ancient Chinese metaphysics</p>
+            <h1>🔮 BaZi AI Assistant</h1>
+            <p>Discover your destiny with AI-powered Chinese metaphysics</p>
         </div>
-        
-        <div class="tabs">
-            <div class="tab active" onclick="showTab('chart')">📊 Chart Generator</div>
-            <div class="tab" onclick="showTab('elements')">🔥 Element Analysis</div>
-            <div class="tab" onclick="showTab('compatibility')">💕 Compatibility</div>
-            <div class="tab" onclick="showTab('luck')">🍀 Luck Periods</div>
-            <div class="tab" onclick="showTab('forecast')">📅 Daily Forecast</div>
-        </div>
-        
-        <!-- Chart Generator Tab -->
-        <div id="chart" class="tab-content active">
-            <h2>Four Pillars Chart Generator</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Birth Date</label>
-                    <input type="date" id="birthDate" value="1990-01-01">
-                </div>
-                <div class="form-group">
-                    <label>Birth Time</label>
-                    <input type="time" id="birthTime" value="12:00">
-                </div>
+    </div>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="tabs" style="margin-top: 100px;">
+                <div class="tab active" onclick="showTab('chart')">📊 Chart Generator</div>
+                <div class="tab" onclick="showTab('elements')">🔥 Element Analysis</div>
+                <div class="tab" onclick="showTab('compatibility')">💕 Compatibility</div>
+                <div class="tab" onclick="showTab('luck')">🍀 Luck Periods</div>
+                <div class="tab" onclick="showTab('forecast')">📅 Daily Forecast</div>
             </div>
-            <div class="form-group">
-                <label>Gender</label>
-                <select id="gender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-            </div>
-            <button class="btn" onclick="generateChart()">Generate BaZi Chart</button>
             
-            <div id="chartResult"></div>
-        </div>
-        
-        <!-- Element Analysis Tab -->
-        <div id="elements" class="tab-content">
-            <h2>Element Strength Analysis</h2>
-            <p>Generate a chart first to see element analysis, or enter birth details:</p>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Birth Date</label>
-                    <input type="date" id="elemBirthDate" value="1990-01-01">
-                </div>
-                <div class="form-group">
-                    <label>Birth Time</label>
-                    <input type="time" id="elemBirthTime" value="12:00">
-                </div>
-            </div>
-            <button class="btn" onclick="analyzeElements()">Analyze Elements</button>
-            
-            <div id="elementResult"></div>
-        </div>
-        
-        <!-- Compatibility Tab -->
-        <div id="compatibility" class="tab-content">
-            <h2>Relationship Compatibility</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                <div>
-                    <h3>Person 1</h3>
+            <!-- Chart Generator Tab -->
+            <div id="chart" class="tab-content active">
+                <h2>Four Pillars Chart Generator</h2>
+                <div class="form-row">
                     <div class="form-group">
                         <label>Birth Date</label>
-                        <input type="date" id="person1Date" value="1990-01-01">
+                        <input type="date" id="birthDate" value="1990-01-01">
                     </div>
                     <div class="form-group">
                         <label>Birth Time</label>
-                        <input type="time" id="person1Time" value="12:00">
-                    </div>
-                    <div class="form-group">
-                        <label>Gender</label>
-                        <select id="person1Gender">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                        </select>
+                        <input type="time" id="birthTime" value="12:00">
                     </div>
                 </div>
-                <div>
-                    <h3>Person 2</h3>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="generateChart()">Generate BaZi Chart</button>
+                
+                <div id="chartResult"></div>
+            </div>
+            
+            <!-- Element Analysis Tab -->
+            <div id="elements" class="tab-content">
+                <h2>Element Strength Analysis</h2>
+                <p>Generate a chart first to see element analysis, or enter birth details:</p>
+                <div class="form-row">
                     <div class="form-group">
                         <label>Birth Date</label>
-                        <input type="date" id="person2Date" value="1992-06-01">
+                        <input type="date" id="elemBirthDate" value="1990-01-01">
                     </div>
                     <div class="form-group">
                         <label>Birth Time</label>
-                        <input type="time" id="person2Time" value="14:00">
+                        <input type="time" id="elemBirthTime" value="12:00">
+                    </div>
+                </div>
+                <button class="btn" onclick="analyzeElements()">Analyze Elements</button>
+                
+                <div id="elementResult"></div>
+            </div>
+            
+            <!-- Compatibility Tab -->
+            <div id="compatibility" class="tab-content">
+                <h2>Relationship Compatibility</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h3>Person 1</h3>
+                        <div class="form-group">
+                            <label>Birth Date</label>
+                            <input type="date" id="person1Date" value="1990-01-01">
+                        </div>
+                        <div class="form-group">
+                            <label>Birth Time</label>
+                            <input type="time" id="person1Time" value="12:00">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="person1Gender">
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Person 2</h3>
+                        <div class="form-group">
+                            <label>Birth Date</label>
+                            <input type="date" id="person2Date" value="1992-06-01">
+                        </div>
+                        <div class="form-group">
+                            <label>Birth Time</label>
+                            <input type="time" id="person2Time" value="14:00">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender</label>
+                            <select id="person2Gender">
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkCompatibility()">Check Compatibility</button>
+                
+                <div id="compatibilityResult"></div>
+            </div>
+            
+            <!-- Luck Periods Tab -->
+            <div id="luck" class="tab-content">
+                <h2>Luck Period Calculator</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Birth Date</label>
+                        <input type="date" id="luckBirthDate" value="1990-01-01">
                     </div>
                     <div class="form-group">
-                        <label>Gender</label>
-                        <select id="person2Gender">
-                            <option value="female">Female</option>
-                            <option value="male">Male</option>
-                        </select>
+                        <label>Birth Time</label>
+                        <input type="time" id="luckBirthTime" value="12:00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="luckGender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="calculateLuck()">Calculate Luck Periods</button>
+                
+                <div id="luckResult"></div>
+            </div>
+            
+            <!-- Forecast Tab -->
+            <div id="forecast" class="tab-content">
+                <h2>Daily & Monthly Forecast</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Your Birth Date</label>
+                        <input type="date" id="forecastBirthDate" value="1990-01-01">
+                    </div>
+                    <div class="form-group">
+                        <label>Your Birth Time</label>
+                        <input type="time" id="forecastBirthTime" value="12:00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Forecast Period</label>
+                    <select id="forecastPeriod">
+                        <option value="daily">Next 7 Days</option>
+                        <option value="monthly">Next 6 Months</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="generateForecast()">Generate Forecast</button>
+                
+                <div id="forecastResult"></div>
+            </div>
+        </div>
+        
+        <!-- AI Chat Panel -->
+        <div class="ai-chat-panel">
+            <div class="chat-header">
+                <h3>🤖 BaZi AI Assistant</h3>
+                <p>Ask me anything about your chart!</p>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai-message">
+                    👋 Hello! I'm your BaZi AI assistant. I can help you understand your Four Pillars chart, explain Chinese metaphysics concepts, and provide personalized insights.
+                    
+                    <div class="quick-questions">
+                        <div class="quick-question" onclick="askQuickQuestion('What does my Day Master mean?')">What does my Day Master mean?</div>
+                        <div class="quick-question" onclick="askQuickQuestion('How do the five elements work?')">How do the five elements work?</div>
+                        <div class="quick-question" onclick="askQuickQuestion('What are favorable elements?')">What are favorable elements?</div>
+                        <div class="quick-question" onclick="askQuickQuestion('Explain my personality traits')">Explain my personality traits</div>
                     </div>
                 </div>
             </div>
-            <button class="btn" onclick="checkCompatibility()">Check Compatibility</button>
             
-            <div id="compatibilityResult"></div>
-        </div>
-        
-        <!-- Luck Periods Tab -->
-        <div id="luck" class="tab-content">
-            <h2>Luck Period Calculator</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Birth Date</label>
-                    <input type="date" id="luckBirthDate" value="1990-01-01">
-                </div>
-                <div class="form-group">
-                    <label>Birth Time</label>
-                    <input type="time" id="luckBirthTime" value="12:00">
-                </div>
+            <div class="typing-indicator" id="typingIndicator">
+                🤖 AI is thinking...
             </div>
-            <div class="form-group">
-                <label>Gender</label>
-                <select id="luckGender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-            </div>
-            <button class="btn" onclick="calculateLuck()">Calculate Luck Periods</button>
             
-            <div id="luckResult"></div>
-        </div>
-        
-        <!-- Forecast Tab -->
-        <div id="forecast" class="tab-content">
-            <h2>Daily & Monthly Forecast</h2>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Your Birth Date</label>
-                    <input type="date" id="forecastBirthDate" value="1990-01-01">
-                </div>
-                <div class="form-group">
-                    <label>Your Birth Time</label>
-                    <input type="time" id="forecastBirthTime" value="12:00">
+            <div class="chat-input-area">
+                <div style="display: flex; align-items: center;">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Ask about your BaZi chart..." onkeypress="handleChatKeyPress(event)">
+                    <button class="send-btn" onclick="sendMessage()">Send</button>
                 </div>
             </div>
-            <div class="form-group">
-                <label>Forecast Period</label>
-                <select id="forecastPeriod">
-                    <option value="daily">Next 7 Days</option>
-                    <option value="monthly">Next 6 Months</option>
-                </select>
-            </div>
-            <button class="btn" onclick="generateForecast()">Generate Forecast</button>
-            
-            <div id="forecastResult"></div>
         </div>
     </div>
 
     <script>
-        // BaZi calculation data
+        // BaZi calculation data (same as before)
         const HEAVENLY_STEMS = {
             0: {chinese: '甲', element: 'wood', yin_yang: 'yang'},
             1: {chinese: '乙', element: 'wood', yin_yang: 'yin'},
@@ -483,9 +685,32 @@
         };
 
         let currentChart = null;
+        let chatHistory = [];
 
+        // AI Knowledge Base
+        const AI_KNOWLEDGE = {
+            dayMaster: {
+                wood: "Wood Day Master represents growth, creativity, and flexibility. Yang Wood (甲) people are like towering trees - ambitious, pioneering, and strong-willed. Yin Wood (乙) people are like grass or flowers - gentle, adaptable, and diplomatic.",
+                fire: "Fire Day Master represents passion, energy, and illumination. Yang Fire (丙) people are like the sun - warm, charismatic, and natural leaders. Yin Fire (丁) people are like candlelight - refined, spiritual, and intuitive.",
+                earth: "Earth Day Master represents stability, patience, and nurturing. Yang Earth (戊) people are like mountains - reliable, conservative, and strong foundations. Yin Earth (己) people are like fertile soil - supportive, detail-oriented, and caring.",
+                metal: "Metal Day Master represents structure, precision, and justice. Yang Metal (庚) people are like swords - decisive, strong-willed, and direct. Yin Metal (辛) people are like jewelry - refined, elegant, and quality-focused.",
+                water: "Water Day Master represents wisdom, adaptability, and flow. Yang Water (壬) people are like oceans - vast, resourceful, and communicative. Yin Water (癸) people are like dew - quiet, intuitive, and deep-thinking."
+            },
+            elements: {
+                basics: "The Five Elements (Wu Xing) are the foundation of Chinese metaphysics. They represent different types of energy and how they interact: Wood grows and creates, Fire burns and transforms, Earth stabilizes and supports, Metal cuts and organizes, Water flows and adapts.",
+                cycles: "There are two main cycles: Generation Cycle (Wood→Fire→Earth→Metal→Water→Wood) where each element nourishes the next, and Destruction Cycle (Wood destroys Earth, Earth destroys Water, Water destroys Fire, Fire destroys Metal, Metal destroys Wood).",
+                balance: "A balanced chart has all five elements present in harmony. Imbalance occurs when some elements are too strong or too weak, which affects personality and life experiences."
+            },
+            pillars: {
+                year: "Year Pillar represents your ancestral influences, early childhood (0-15), and how others perceive you. It's your 'outer self' and social image.",
+                month: "Month Pillar represents your career, relationships, adult life (16-45), and your relationship with parents and siblings. It's your 'working self'.",
+                day: "Day Pillar is most important - it represents your core self, marriage, and middle age (46-60). The Day Master (top of Day Pillar) is your true personality.",
+                hour: "Hour Pillar represents your children, old age (60+), and your inner thoughts. It's your 'private self' and how you think when alone."
+            }
+        };
+
+        // All original BaZi functions (keeping them the same)
         function showTab(tabName) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -493,7 +718,6 @@
                 tab.classList.remove('active');
             });
             
-            // Show selected tab
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
@@ -508,7 +732,7 @@
         }
 
         function getDaysSinceEpoch(date) {
-            const epoch = new Date(1900, 0, 31); // Jan 31, 1900 as reference
+            const epoch = new Date(1900, 0, 31);
             const timeDiff = date.getTime() - epoch.getTime();
             return Math.floor(timeDiff / (1000 * 3600 * 24)) + 1;
         }
@@ -530,19 +754,15 @@
             const day = date.getDate();
             const hour = date.getHours();
 
-            // Calculate year pillar
             const yearStemIndex = (year - 4) % 10;
             const yearBranchIndex = (year - 4) % 12;
 
-            // Calculate month pillar (simplified)
             const monthStemIndex = (yearStemIndex * 2 + month) % 10;
             const monthBranchIndex = (month + 1) % 12;
 
-            // Calculate day pillar
             const daysSince = getDaysSinceEpoch(date);
             const dayPillar = calculateStemBranch(daysSince);
 
-            // Calculate hour pillar
             const hourBranchIndex = getHourBranch(hour);
             const hourStemIndex = (dayPillar.stem.chinese.charCodeAt(0) % 10 * 2 + Math.floor(hour / 2)) % 10;
 
@@ -576,7 +796,7 @@
                 <div class="chart-container">
                     <h3>Your Four Pillars Chart</h3>
                     <div class="pillars-grid">
-                        <div class="pillar">
+                        <div class="pillar" onclick="explainPillar('year')">
                             <h4>Year Pillar</h4>
                             <div class="stem-branch">
                                 <div class="chinese">${chart.year.stem.chinese}</div>
@@ -588,7 +808,7 @@
                                 <div style="font-size: 11px; margin-top: 5px;">${chart.year.branch.animal}</div>
                             </div>
                         </div>
-                        <div class="pillar">
+                        <div class="pillar" onclick="explainPillar('month')">
                             <h4>Month Pillar</h4>
                             <div class="stem-branch">
                                 <div class="chinese">${chart.month.stem.chinese}</div>
@@ -600,8 +820,8 @@
                                 <div style="font-size: 11px; margin-top: 5px;">${chart.month.branch.animal}</div>
                             </div>
                         </div>
-                        <div class="pillar">
-                            <h4>Day Pillar</h4>
+                        <div class="pillar" onclick="explainPillar('day')">
+                            <h4>Day Pillar ⭐</h4>
                             <div class="stem-branch">
                                 <div class="chinese">${chart.day.stem.chinese}</div>
                                 <div class="element ${chart.day.stem.element}">${chart.day.stem.element.toUpperCase()}</div>
@@ -612,7 +832,7 @@
                                 <div style="font-size: 11px; margin-top: 5px;">${chart.day.branch.animal}</div>
                             </div>
                         </div>
-                        <div class="pillar">
+                        <div class="pillar" onclick="explainPillar('hour')">
                             <h4>Hour Pillar</h4>
                             <div class="stem-branch">
                                 <div class="chinese">${chart.hour.stem.chinese}</div>
@@ -626,8 +846,45 @@
                         </div>
                     </div>
                     ${generateBasicAnalysis(chart, gender)}
+                    
+                    <div class="ai-suggestion" onclick="askQuickQuestion('Explain my complete BaZi chart in detail')">
+                        🤖 Click here to get AI analysis of your complete chart
+                    </div>
                 </div>
             `;
+
+            // Auto-generate AI welcome message for new chart
+            setTimeout(() => {
+                addAIMessage(`🎉 Great! I can see your BaZi chart now. Your Day Master is ${chart.day.stem.chinese} (${chart.day.stem.element.toUpperCase()}). ${AI_KNOWLEDGE.dayMaster[chart.day.stem.element]} 
+
+Click on any pillar above to learn more, or ask me specific questions about your chart!`);
+            }, 1000);
+        }
+
+        function explainPillar(pillarType) {
+            if (!currentChart) {
+                addAIMessage("Please generate your BaZi chart first!");
+                return;
+            }
+            
+            const pillar = currentChart[pillarType];
+            const message = `Tell me about my ${pillarType} pillar: ${pillar.stem.chinese}${pillar.branch.chinese}`;
+            addUserMessage(message);
+            
+            setTimeout(() => {
+                let response = `Your ${pillarType.toUpperCase()} PILLAR: ${pillar.stem.chinese}${pillar.branch.chinese}\n\n`;
+                response += `${AI_KNOWLEDGE.pillars[pillarType]}\n\n`;
+                response += `Your ${pillarType} pillar has:\n`;
+                response += `• ${pillar.stem.chinese} (${pillar.stem.element.toUpperCase()} ${pillar.stem.yin_yang})\n`;
+                response += `• ${pillar.branch.chinese} (${pillar.branch.element.toUpperCase()}) - ${pillar.branch.animal}\n\n`;
+                
+                if (pillarType === 'day') {
+                    response += `⭐ This is your DAY MASTER - your core personality!\n`;
+                    response += `${AI_KNOWLEDGE.dayMaster[pillar.stem.element]}`;
+                }
+                
+                addAIMessage(response);
+            }, 1000);
         }
 
         function generateBasicAnalysis(chart, gender) {
@@ -684,11 +941,210 @@
             return traits[element][yinYang];
         }
 
+        // AI Chat Functions
+        function addUserMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message';
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            chatHistory.push({type: 'user', message: message});
+        }
+
+        function addAIMessage(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai-message';
+            messageDiv.innerHTML = message.replace(/\n/g, '<br>');
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            chatHistory.push({type: 'ai', message: message});
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('show');
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('show');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            addUserMessage(message);
+            input.value = '';
+            
+            showTyping();
+            
+            setTimeout(() => {
+                hideTyping();
+                const response = generateAIResponse(message);
+                addAIMessage(response);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        function askQuickQuestion(question) {
+            addUserMessage(question);
+            showTyping();
+            
+            setTimeout(() => {
+                hideTyping();
+                const response = generateAIResponse(question);
+                addAIMessage(response);
+            }, 1000);
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function generateAIResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Chart-specific responses
+            if (currentChart) {
+                if (message.includes('day master')) {
+                    const dayMaster = currentChart.day.stem;
+                    return `Your Day Master is ${dayMaster.chinese} (${dayMaster.element.toUpperCase()} ${dayMaster.yin_yang}). ${AI_KNOWLEDGE.dayMaster[dayMaster.element]}
+
+This means you tend to be ${getPersonalityTraits(dayMaster.element, dayMaster.yin_yang).toLowerCase()}. Your Day Master is the most important part of your chart as it represents your core self!`;
+                }
+                
+                if (message.includes('personality') || message.includes('traits')) {
+                    const dayMaster = currentChart.day.stem;
+                    const analysis = calculateElementStrengths(currentChart);
+                    return `Based on your ${dayMaster.element.toUpperCase()} Day Master, your core personality traits include: ${getPersonalityTraits(dayMaster.element, dayMaster.yin_yang)}.
+
+Your strongest elements are: ${Object.keys(analysis.strengths).filter(elem => analysis.strengths[elem] >= 25).join(', ').toUpperCase()}
+
+This combination suggests you're naturally ${dayMaster.element === 'wood' ? 'growth-oriented and creative' : dayMaster.element === 'fire' ? 'passionate and energetic' : dayMaster.element === 'earth' ? 'stable and reliable' : dayMaster.element === 'metal' ? 'organized and principled' : 'adaptable and wise'}.`;
+                }
+                
+                if (message.includes('complete') || message.includes('detail')) {
+                    return generateCompleteChartAnalysis();
+                }
+                
+                if (message.includes('favorable') || message.includes('lucky')) {
+                    const analysis = calculateElementStrengths(currentChart);
+                    return `Your favorable elements are: ${analysis.favorable.join(', ').toUpperCase()}
+
+These elements support and strengthen your energy. You should:
+• Wear colors: ${getElementColors(analysis.favorable)}
+• Face directions: ${getElementDirections(analysis.favorable)}
+• Consider careers in: ${getElementCareers(analysis.favorable)}
+
+Avoid overexposure to: ${analysis.unfavorable.join(', ').toUpperCase()} as these may drain your energy.`;
+                }
+            }
+            
+            // General BaZi knowledge
+            if (message.includes('element') && message.includes('work')) {
+                return AI_KNOWLEDGE.elements.basics + "\n\n" + AI_KNOWLEDGE.elements.cycles;
+            }
+            
+            if (message.includes('pillar')) {
+                return `The Four Pillars represent different life phases:
+
+🗓️ YEAR PILLAR: ${AI_KNOWLEDGE.pillars.year}
+
+🌙 MONTH PILLAR: ${AI_KNOWLEDGE.pillars.month}
+
+☀️ DAY PILLAR: ${AI_KNOWLEDGE.pillars.day}
+
+⏰ HOUR PILLAR: ${AI_KNOWLEDGE.pillars.hour}
+
+The Day Pillar (especially Day Master) is most important for understanding your core personality!`;
+            }
+            
+            if (message.includes('balance')) {
+                return AI_KNOWLEDGE.elements.balance + "\n\nIn your chart, look for which elements are strongest/weakest. The goal is harmony, not necessarily equal amounts of each element.";
+            }
+            
+            // Compatibility questions
+            if (message.includes('compatibility') || message.includes('relationship')) {
+                return `BaZi compatibility looks at how two people's charts interact:
+
+🔥 ELEMENT HARMONY: How your Day Masters support or clash
+🐲 ANIMAL COMPATIBILITY: Whether your zodiac animals are allies
+⚖️ BALANCE: How you complement each other's strengths/weaknesses
+
+Generate charts for both people in the Compatibility tab, and I'll give you detailed analysis!`;
+            }
+            
+            // Career and life guidance
+            if (message.includes('career') || message.includes('job')) {
+                if (currentChart) {
+                    const dayMaster = currentChart.day.stem.element;
+                    return `Based on your ${dayMaster.toUpperCase()} Day Master, suitable careers include:
+
+${getElementCareers([dayMaster])}
+
+Your natural talents align with ${dayMaster === 'wood' ? 'growth, teaching, and healing fields' : dayMaster === 'fire' ? 'communication, entertainment, and leadership roles' : dayMaster === 'earth' ? 'service, real estate, and nurturing professions' : dayMaster === 'metal' ? 'finance, technology, and precision work' : 'research, transportation, and fluid industries'}.
+
+Check your favorable elements for additional career directions!`;
+                }
+                return "Generate your BaZi chart first, then I can provide personalized career guidance based on your Day Master and element balance!";
+            }
+            
+            // Default responses
+            const defaultResponses = [
+                "That's an interesting question! Could you be more specific about your BaZi chart? If you haven't generated one yet, please do so in the Chart Generator tab.",
+                "I'd love to help! For the most accurate advice, I'll need to see your BaZi chart. Have you generated it yet?",
+                "Great question! BaZi is a complex system. Could you clarify what specific aspect you'd like me to explain?",
+                "I'm here to help with all things BaZi! Try asking about your Day Master, elements, compatibility, or luck periods.",
+                "To give you the best personalized insights, please generate your BaZi chart first, then ask me about specific aspects!"
+            ];
+            
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        }
+
+        function generateCompleteChartAnalysis() {
+            if (!currentChart) return "Please generate your chart first!";
+            
+            const dayMaster = currentChart.day.stem;
+            const analysis = calculateElementStrengths(currentChart);
+            
+            return `🔮 COMPLETE BAZI ANALYSIS 🔮
+
+📊 YOUR FOUR PILLARS:
+Year: ${currentChart.year.stem.chinese}${currentChart.year.branch.chinese} (${currentChart.year.branch.animal})
+Month: ${currentChart.month.stem.chinese}${currentChart.month.branch.chinese} (${currentChart.month.branch.animal})
+Day: ${currentChart.day.stem.chinese}${currentChart.day.branch.chinese} (${currentChart.day.branch.animal}) ⭐
+Hour: ${currentChart.hour.stem.chinese}${currentChart.hour.branch.chinese} (${currentChart.hour.branch.animal})
+
+🎯 DAY MASTER: ${dayMaster.chinese} (${dayMaster.element.toUpperCase()})
+${AI_KNOWLEDGE.dayMaster[dayMaster.element]}
+
+🌟 ELEMENT BALANCE:
+${Object.keys(analysis.strengths).map(elem => `${elem.toUpperCase()}: ${analysis.strengths[elem]}%`).join('\n')}
+
+✅ FAVORABLE: ${analysis.favorable.join(', ').toUpperCase()}
+❌ UNFAVORABLE: ${analysis.unfavorable.join(', ').toUpperCase()}
+
+💡 RECOMMENDATIONS:
+• Colors: ${getElementColors(analysis.favorable)}
+• Directions: ${getElementDirections(analysis.favorable)}
+• Careers: ${getElementCareers(analysis.favorable)}
+
+Ask me specific questions about any aspect you'd like to explore deeper!`;
+        }
+
+        // Continue with existing BaZi functions...
         function analyzeElements() {
             const birthDate = document.getElementById('elemBirthDate').value;
             const birthTime = document.getElementById('elemBirthTime').value;
             
             const chart = calculateBaZi(birthDate, birthTime);
+            currentChart = chart;
             const analysis = calculateElementStrengths(chart);
             
             const resultDiv = document.getElementById('elementResult');
@@ -722,6 +1178,10 @@
                     <p><strong>Best directions:</strong> ${getElementDirections(analysis.favorable)}</p>
                     <p><strong>Career fields:</strong> ${getElementCareers(analysis.favorable)}</p>
                 </div>
+                
+                <div class="ai-suggestion" onclick="askQuickQuestion('Explain my element analysis in detail')">
+                    🤖 Get detailed AI explanation of your element balance
+                </div>
             `;
         }
 
@@ -736,14 +1196,12 @@
             const elementCount = {wood: 0, fire: 0, earth: 0, metal: 0, water: 0};
             elements.forEach(elem => elementCount[elem]++);
 
-            // Convert to percentages
             const total = elements.length;
             const strengths = {};
             Object.keys(elementCount).forEach(elem => {
                 strengths[elem] = Math.round((elementCount[elem] / total) * 100);
             });
 
-            // Determine favorable/unfavorable based on day master
             const dayMaster = chart.day.stem.element;
             const strongElements = Object.keys(elementCount).filter(elem => elementCount[elem] >= 2);
             const isDayMasterStrong = strongElements.includes(dayMaster);
@@ -752,12 +1210,10 @@
             let unfavorable = [];
 
             if (isDayMasterStrong) {
-                // If day master is strong, need elements that drain or control it
                 favorable.push(ELEMENT_RELATIONS[dayMaster].generates);
                 favorable.push(ELEMENT_RELATIONS[dayMaster].destroyed_by);
                 unfavorable = strongElements.filter(elem => elem !== dayMaster);
             } else {
-                // If day master is weak, need elements that support it
                 favorable.push(ELEMENT_RELATIONS[dayMaster].generated_by);
                 favorable.push(dayMaster);
                 unfavorable.push(ELEMENT_RELATIONS[dayMaster].destroyed_by);
@@ -799,6 +1255,7 @@
             return elements.map(elem => careers[elem]).join(', ');
         }
 
+        // Rest of functions remain the same but with AI suggestions added...
         function checkCompatibility() {
             const person1Date = document.getElementById('person1Date').value;
             const person1Time = document.getElementById('person1Time').value;
@@ -843,6 +1300,10 @@
                             ${compatibility.recommendations.map(rec => `<li>${rec}</li>`).join('')}
                         </ul>
                     </div>
+                    
+                    <div class="ai-suggestion" onclick="askQuickQuestion('Give me detailed relationship advice based on our compatibility')">
+                        🤖 Get personalized relationship advice from AI
+                    </div>
                 </div>
             `;
         }
@@ -853,7 +1314,6 @@
             const animal1 = chart1.year.branch.animal;
             const animal2 = chart2.year.branch.animal;
 
-            // Element compatibility
             let elementRating = 3;
             let elementAnalysis = '';
             
@@ -874,7 +1334,6 @@
                 elementAnalysis = `Neutral element relationship. Compatibility depends on other factors in your charts.`;
             }
 
-            // Animal compatibility (simplified)
             const animalCompatibility = {
                 'Rat': ['Dragon', 'Monkey', 'Ox'],
                 'Ox': ['Snake', 'Rooster', 'Rat'],
@@ -940,6 +1399,7 @@
             const gender = document.getElementById('luckGender').value;
 
             const chart = calculateBaZi(birthDate, birthTime);
+            currentChart = chart;
             const luckPeriods = calculateLuckPeriods(chart, new Date(birthDate), gender);
 
             const resultDiv = document.getElementById('luckResult');
@@ -963,6 +1423,10 @@
                         <p><strong>For You:</strong> ${getCurrentYearAnalysis(chart)}</p>
                     </div>
                 </div>
+                
+                <div class="ai-suggestion" onclick="askQuickQuestion('Explain my current luck period and what to expect')">
+                    🤖 Get AI insights about your current and upcoming luck periods
+                </div>
             `;
         }
 
@@ -971,7 +1435,6 @@
             const currentYear = 2025;
             const currentAge = currentYear - birthYear;
 
-            // Simplified luck period calculation
             const periods = [];
             for (let i = 0; i < 8; i++) {
                 const startAge = i * 10 + 5;
@@ -979,7 +1442,6 @@
                 const startYear = birthYear + startAge;
                 const endYear = birthYear + endAge;
 
-                // Calculate luck pillar (simplified)
                 const monthStem = chart.month.stem;
                 const monthBranch = chart.month.branch;
                 
@@ -1002,7 +1464,7 @@
             }
 
             return {
-                tenYear: periods.filter(p => p.startYear <= currentYear + 50) // Show relevant periods
+                tenYear: periods.filter(p => p.startYear <= currentYear + 50)
             };
         }
 
@@ -1049,6 +1511,7 @@
             const period = document.getElementById('forecastPeriod').value;
 
             const chart = calculateBaZi(birthDate, birthTime);
+            currentChart = chart;
             const forecasts = period === 'daily' ? generateDailyForecast(chart) : generateMonthlyForecast(chart);
 
             const resultDiv = document.getElementById('forecastResult');
@@ -1067,6 +1530,10 @@
                             </div>
                         </div>
                     `).join('')}
+                </div>
+                
+                <div class="ai-suggestion" onclick="askQuickQuestion('What should I focus on this ${period === 'daily' ? 'week' : 'month'}?')">
+                    🤖 Get AI advice for your ${period === 'daily' ? 'weekly' : 'monthly'} focus
                 </div>
             `;
         }
@@ -1119,7 +1586,6 @@
                 const date = new Date(today.getFullYear(), today.getMonth() + i, 1);
                 const monthName = date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
                 
-                // Simplified monthly pillar calculation
                 const monthIndex = date.getMonth();
                 const monthPillar = {
                     stem: HEAVENLY_STEMS[monthIndex % 10],
@@ -1153,6 +1619,22 @@
             
             return forecasts;
         }
+
+        // Initialize chat with welcome message
+        window.onload = function() {
+            setTimeout(() => {
+                addAIMessage(`🌟 Welcome to your BaZi AI Assistant! I'm here to help you understand Chinese metaphysics and your Four Pillars chart.
+
+Here's what I can help you with:
+• Generate and explain your BaZi chart
+• Analyze your personality and elements  
+• Check relationship compatibility
+• Calculate luck periods and forecasts
+• Answer any BaZi questions you have
+
+Start by generating your chart in the Chart Generator tab, then come chat with me! 🔮`);
+            }, 500);
+        };
     </script>
 </body>
 </html>
