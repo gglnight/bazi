@@ -163,28 +163,16 @@ function generateChart() {
         <div class="chart-container">
             <h3>Your Four Pillars Revealed</h3>
             <div class="pillars-grid">
-                <div class="pillar" onclick="explainPillar('year')">
-                    <h4>Year Pillar</h4>
+                <div class="pillar" onclick="explainPillar('hour')">
+                    <h4>Hour Pillar</h4>
                     <div class="stem-branch">
-                        <div class="chinese">${chart.year.stem.chinese}</div>
-                        <div class="element ${chart.year.stem.element}">${chart.year.stem.element.toUpperCase()}</div>
+                        <div class="chinese">${chart.hour.stem.chinese}</div>
+                        <div class="element ${chart.hour.stem.element}">${chart.hour.stem.element.toUpperCase()}</div>
                     </div>
                     <div class="stem-branch">
-                        <div class="chinese">${chart.year.branch.chinese}</div>
-                        <div class="element ${chart.year.branch.element}">${chart.year.branch.element.toUpperCase()}</div>
-                        <div style="font-size: 11px; margin-top: 5px; color: rgba(120, 219, 226, 0.7);">${chart.year.branch.animal}</div>
-                    </div>
-                </div>
-                <div class="pillar" onclick="explainPillar('month')">
-                    <h4>Month Pillar</h4>
-                    <div class="stem-branch">
-                        <div class="chinese">${chart.month.stem.chinese}</div>
-                        <div class="element ${chart.month.stem.element}">${chart.month.stem.element.toUpperCase()}</div>
-                    </div>
-                    <div class="stem-branch">
-                        <div class="chinese">${chart.month.branch.chinese}</div>
-                        <div class="element ${chart.month.branch.element}">${chart.month.branch.element.toUpperCase()}</div>
-                        <div style="font-size: 11px; margin-top: 5px; color: rgba(120, 219, 226, 0.7);">${chart.month.branch.animal}</div>
+                        <div class="chinese">${chart.hour.branch.chinese}</div>
+                        <div class="element ${chart.hour.branch.element}">${chart.hour.branch.element.toUpperCase()}</div>
+                        <div style="font-size: 11px; margin-top: 5px; color: rgba(120, 219, 226, 0.7);">${chart.hour.branch.animal}</div>
                     </div>
                 </div>
                 <div class="pillar" onclick="explainPillar('day')">
@@ -199,16 +187,28 @@ function generateChart() {
                         <div style="font-size: 11px; margin-top: 5px; color: rgba(120, 219, 226, 0.7);">${chart.day.branch.animal}</div>
                     </div>
                 </div>
-                <div class="pillar" onclick="explainPillar('hour')">
-                    <h4>Hour Pillar</h4>
+                <div class="pillar" onclick="explainPillar('month')">
+                    <h4>Month Pillar</h4>
                     <div class="stem-branch">
-                        <div class="chinese">${chart.hour.stem.chinese}</div>
-                        <div class="element ${chart.hour.stem.element}">${chart.hour.stem.element.toUpperCase()}</div>
+                        <div class="chinese">${chart.month.stem.chinese}</div>
+                        <div class="element ${chart.month.stem.element}">${chart.month.stem.element.toUpperCase()}</div>
                     </div>
                     <div class="stem-branch">
-                        <div class="chinese">${chart.hour.branch.chinese}</div>
-                        <div class="element ${chart.hour.branch.element}">${chart.hour.branch.element.toUpperCase()}</div>
-                        <div style="font-size: 11px; margin-top: 5px; color: rgba(120, 219, 226, 0.7);">${chart.hour.branch.animal}</div>
+                        <div class="chinese">${chart.month.branch.chinese}</div>
+                        <div class="element ${chart.month.branch.element}">${chart.month.branch.element.toUpperCase()}</div>
+                        <div style="font-size: 11px; margin-top: 5px; color: rgba(120, 219, 226, 0.7);">${chart.month.branch.animal}</div>
+                    </div>
+                </div>
+                <div class="pillar" onclick="explainPillar('year')">
+                    <h4>Year Pillar</h4>
+                    <div class="stem-branch">
+                        <div class="chinese">${chart.year.stem.chinese}</div>
+                        <div class="element ${chart.year.stem.element}">${chart.year.stem.element.toUpperCase()}</div>
+                    </div>
+                    <div class="stem-branch">
+                        <div class="chinese">${chart.year.branch.chinese}</div>
+                        <div class="element ${chart.year.branch.element}">${chart.year.branch.element.toUpperCase()}</div>
+                        <div style="font-size: 11px; margin-top: 5px; color: rgba(120, 219, 226, 0.7);">${chart.year.branch.animal}</div>
                     </div>
                 </div>
             </div>
